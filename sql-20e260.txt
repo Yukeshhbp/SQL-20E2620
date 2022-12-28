@@ -1,0 +1,316 @@
+
+SQL> create table stud (s_id number(3) primary key , First_name varchar2(10),Last_name varchar2(10), Age number(2));
+
+Table created.
+
+SQL> desc table;
+ERROR:
+ORA-00931: missing identifier
+
+
+SQL> desc stud;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ S_ID                                      NOT NULL NUMBER(3)
+ FIRST_NAME                                         VARCHAR2(10)
+ LAST_NAME                                          VARCHAR2(10)
+ AGE                                                NUMBER(2)
+
+SQL> create table Dept(s_id number(3),dept_id number(3));
+
+Table created.
+
+SQL> desc Dept;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ S_ID                                               NUMBER(3)
+ DEPT_ID                                            NUMBER(3)
+
+SQL> alter table Dept modify(s_id number(3) primary key);
+
+Table altered.
+
+SQL> desc Dept;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ S_ID                                      NOT NULL NUMBER(3)
+ DEPT_ID                                            NUMBER(3)
+
+
+SQL> insert into stud values(1,'A','B',10);
+
+1 row created.
+
+SQL> insert into stud values(2,'c','d',15);
+
+1 row created.
+
+SQL> insert into stud values(3,'e','f',20);
+
+1 row created.
+
+SQL> insert into stud values(4,'g','h',17);
+
+1 row created.
+
+
+SQL> delete from stud;
+
+4 rows deleted.
+
+SQL> insert into stud values(10,'tony','stark',50);
+
+1 row created.
+
+SQL> insert into stud values(11,'steve','rogers',38);
+
+1 row created.
+
+SQL> insert into stud values(13,'natasha','romanoff',25);
+
+1 row created.
+
+SQL> insert into stud values(14,'star','lord',20);
+
+1 row created.
+
+SQL> insert into stud values(15,'peter','parker',20);
+
+1 row created.
+
+SQL> insert into stud values(16,'tyroin','lannister',28);
+
+1 row created.
+
+SQL> select*from stud;
+
+      S_ID FIRST_NAME LAST_NAME         AGE
+---------- ---------- ---------- ----------
+        10 tony       stark              50
+        11 steve      rogers             38
+        13 natasha    romanoff           25
+        14 star       lord               20
+        15 peter      parker             20
+        16 tyroin     lannister          28
+
+6 rows selected.
+
+SQL> alter table dept modify(dept_id varchar2(10));
+
+Table altered.
+
+SQL> insert into dept values(10,'CSC');
+
+1 row created.
+
+SQL> insert into dept values(11,'mech');
+
+1 row created.
+
+SQL> insert into dept values(13,'pt');
+
+1 row created.
+
+SQL> insert into dept values(14,'astro');
+
+1 row created.
+
+SQL> insert into dept values(15,'physics');
+
+1 row created.
+
+SQL> insert into dept values(16,'politics');
+
+1 row created.
+
+SQL> select*from dept;
+
+      S_ID DEPT_ID
+---------- ----------
+        10 CSC
+        11 mech
+        13 pt
+        14 astro
+        15 physics
+        16 politics
+
+6 rows selected.
+
+SQL> alter table dept add foreign key(s_id ) references stud(s_id);
+
+Table altered.
+
+SQL> desc dept;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ S_ID                                      NOT NULL NUMBER(3)
+ DEPT_ID                                            VARCHAR2(10)
+
+
+SQL> update dept set dept_id = 'mech' where s_id=10;
+
+1 row updated.
+
+SQL> desc dept;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ S_ID                                      NOT NULL NUMBER(3)
+ DEPT_ID                                            VARCHAR2(10)
+
+SQL> select*from dept;
+
+      S_ID DEPT_ID
+---------- ----------
+        10 mech
+        11 mech
+        13 pt
+        14 astro
+        15 physics
+        16 politics
+
+6 rows selected.
+
+SQL> create table contact(s_id number(2),Email varchar2(30),Mobile number(10));
+
+Table created.
+
+SQL> insert into contact values(10,'abc@gmail.com',9876543210);
+
+1 row created.
+
+SQL> insert into contact values(11,'steve@gmail.com',9998884441);
+
+1 row created.
+
+SQL> insert into contact values(13,'natasha@gmail.com',9669696459);
+
+1 row created.
+
+SQL> insert into contact values(14,'starlord@space.com',1234567890);
+
+1 row created.
+
+SQL> insert into contact values(15,'spidy@verse.com',2468135790);
+
+1 row created.
+
+SQL> insert into contact values(16,'tryroin@lannister.com',1470258369);
+
+1 row created.
+
+
+SQL> update contact set  email='tony@stark.com' where s_id=10;
+
+1 row updated.
+
+SQL> select*from contact;
+
+      S_ID EMAIL                              MOBILE
+---------- ------------------------------ ----------
+        10 tony@stark.com                 9876543210
+        11 steve@gmail.com                9998884441
+        13 natasha@gmail.com              9669696459
+        14 starlord@space.com             1234567890
+        15 spidy@verse.com                2468135790
+        16 tryroin@lannister.com          1470258369
+
+6 rows selected.
+
+
+SQL> alter table contact add foreign key(s_id) references stud(s_id);
+
+Table altered.
+
+SQL> create view always as select s.s_id,s.first_name,d.dept_id,c.email from stud s,dept d, contact c where s.s_id=d.s_id and s.s_id=c.s_id;
+
+View created.
+
+
+SQL> select*from always;
+
+      S_ID FIRST_NAME DEPT_ID    EMAIL
+---------- ---------- ---------- ------------------------------
+        10 tony       mech       tony@stark.com
+        11 steve      mech       steve@gmail.com
+        13 natasha    pt         natasha@gmail.com
+        14 star       astro      starlord@space.com
+        15 peter      physics    spidy@verse.com
+        16 tyroin     politics   tryroin@lannister.com
+
+6 rows selected.
+
+SQL> create view v1 as select*from contact;
+
+View created.
+
+SQL> select * from v1;
+
+      S_ID EMAIL                              MOBILE
+---------- ------------------------------ ----------
+        10 tony@stark.com                 9876543210
+        11 steve@gmail.com                9998884441
+        13 natasha@gmail.com              9669696459
+        14 starlord@space.com             1234567890
+        15 spidy@verse.com                2468135790
+        16 tryroin@lannister.com          1470258369
+
+6 rows selected.
+
+SQL> update contact set mobile=1593574682 where s_id=14;
+
+1 row updated.
+
+SQL> select*from v1;
+
+      S_ID EMAIL                              MOBILE
+---------- ------------------------------ ----------
+        10 tony@stark.com                 9876543210
+        11 steve@gmail.com                9998884441
+        13 natasha@gmail.com              9669696459
+        14 starlord@space.com             1593574682
+        15 spidy@verse.com                2468135790
+        16 tryroin@lannister.com          1470258369
+
+6 rows selected.
+
+SQL> select*from contact;
+
+      S_ID EMAIL                              MOBILE
+---------- ------------------------------ ----------
+        10 tony@stark.com                 9876543210
+        11 steve@gmail.com                9998884441
+        13 natasha@gmail.com              9669696459
+        14 starlord@space.com             1593574682
+        15 spidy@verse.com                2468135790
+        16 tryroin@lannister.com          1470258369
+
+6 rows selected.
+
+SQL> select *from contact where s_id=(select s_id from contact where mobile=9876543210);
+
+      S_ID EMAIL                              MOBILE
+---------- ------------------------------ ----------
+        10 tony@stark.com                 9876543210
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
